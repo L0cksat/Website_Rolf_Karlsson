@@ -1,0 +1,16 @@
+@font-face {
+    font-family: Rolftext;
+    src: url('../fonts/PoiretOne-Regular.ttf');
+}
+
+:root {
+    padding: 0;
+    margin: 0;
+}
+
+* {
+    background-image: url('../img/flamingos.png');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
