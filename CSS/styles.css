@@ -3,6 +3,10 @@
     src: url('../fonts/PoiretOne-Regular.ttf');
 }
 
+:root{
+    --opaqueRed: rgba(160, 10, 10, 0.6);
+}
+
 
 * {
     padding: 0;
@@ -15,19 +19,6 @@
     background-repeat: no-repeat;
     font-family: Rolftext;
     font-weight: bold;
-}
-
-table {
-    width: 80%;
-    border: 1px solid black;
-    margin: auto;
-    text-align: center;
-    background-color: lightgray;
-
-}
-
-td {
-    text-align: center;
 }
 
 footer {
@@ -50,13 +41,18 @@ h1 {
 }
 
 .underCons{
+    background-image: none;
+    background-color: yellow;
     text-decoration: none;
     font-weight: 1500;
     transition: 0.3s;
 }
 
 .underCons:hover{
+    background-image: none;
+    background-color: black;
     border: 10px solid yellow;
+    color: yellow;
     border-radius: 5px;
     transition: 0.3s ;
 }
@@ -82,18 +78,21 @@ header .navbar{
     position: relative;
     display: flex;
 }
+
 header .navbar li{
     list-style: none;
     margin-left: 30px;
+    
 }
 
 header .navbar li a{
     border: 5px outset white;
     border-radius: 5px;
-    background-color: red;
+    background-image: none;
+    background-color: var(--opaqueRed);
     text-decoration: none;
     color: black;
-    font-weight: 600px;
+    font-weight: 600;
     padding: 10px;
     transition: 0.3s;
     font-size: 1.5em;
@@ -128,12 +127,43 @@ header .navbar li a:hover{
     color: white;
 }
 
-img.aves {
-    width: 15rem;
+p {
+    color: black;
+    font-size: 17px;
 }
 
-p {
-    color: brown;
-    font-size: 17px;
+/*Estilos para la galería de fotos de los aves.*/
+.gallContainer{
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+    background-image: url('../img/black-fabric-texture-background-vector.jpg');
+    border: 5px solid black;
+    border-radius: 10px;
+}
+
+.gallery{
+    display: inline-block;
+    border: 1px solid grey;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 200px;
+}
+
+.gallery .description{
+    background-image: none;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+.gallery:hover{
+    border: 1px solid darkgoldenrod;
+}
+.gallery img{
+    width: 100%;
+    margin-bottom: -5px;
 }
 
