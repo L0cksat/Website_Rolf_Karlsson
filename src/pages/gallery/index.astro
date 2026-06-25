@@ -1,13 +1,26 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Navbar from '../../components/Navbar.astro';
+import { getCollection } from 'astro:content';
+
+	const birds = await getCollection('birds')
 ---
 
 <BaseLayout title="Gallery — Rolf G. Karlsson">
 	<main class="mx-auto max-w-6xl px-4 py-10">
-		<h1 class="mb-8 text-3xl font-light">Gallery</h1>
-		<p class="text-neutral-400">Tailwind card grid (thumbnail + common name) will go here.</p>
+		<h1 class="mb-8 text-3xl font-light text-center">Gallery</h1>
 	</main>
+	<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		{birds.map((bird) => (
+			<a href={`/gallery/${bird.id}`} class="group block overflow-hidden rounded-lg border border-neutral-800 bg-neutral-900 transition hover:border-neutral-600">
+				<img src={bird.data.image} alt={bird.data.commonName} class="aspect-4/3 w-full object-cover transition group-hover:scale-[1.02]">
+				<div class="p-3">
+					<h2 class="text-sm font-medium text-neutral-100">{bird.data.commonName}</h2>
+					<p class="mt-1 text-xs text-neutral-100">{bird.data.date.toLocaleDateString()}</p>
+				</div>
+			</a>
+		))}
+	</div>
 
 	<Navbar />
 </BaseLayout>

@@ -16,12 +16,14 @@ const { bird } = Astro.props;
 ---
 
 <BaseLayout title={`${bird.data.commonName} — Rolf G. Karlsson`}>
+	<a href="/gallery"><button class="rounded-md bg-neutral-400 text-white px-2 py-2 mt-4 ml-4 transition hover:bg-neutral-800 hover:text-neutral-400">Back to Gallery</button></a>
 	<main class="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2">
 		<img
 			src={bird.data.image}
 			alt={bird.data.commonName}
 			class="w-full rounded-lg object-cover"
 		/>
+		
 		<div class="space-y-4">
 			<h1 class="text-3xl font-light">{bird.data.commonName}</h1>
 			<p class="italic text-neutral-400">{bird.data.latinName}</p>
