@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Navbar from '../../components/Navbar.astro';
+
+export async function getStaticPaths() {
+	const birds = await getCollection('birds');
+
+	return birds.map((bird) => ({
+		params: { slug: bird.id },
+		props: { bird },
+	}));
+}
+
+const { bird } = Astro.props;
+---
+
+<BaseLayout title={`${bird.data.commonName} — Rolf G. Karlsson`}>
+	<main class="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2">
+		<img
+			src={bird.data.image}
+			alt={bird.data.commonName}
+			class="w-full rounded-lg object-cover"
+		/>
+		<div class="space-y-4">
+			<h1 class="text-3xl font-light">{bird.data.commonName}</h1>
+			<p class="italic text-neutral-400">{bird.data.latinName}</p>
+			<p class="text-sm text-neutral-500">
+				{bird.data.date.toLocaleDateString()} · {bird.data.location}
+			</p>
+			<p class="text-neutral-300">{bird.data.story}</p>
+		</div>
+	</main>
+
+	<Navbar />
+</BaseLayout>
