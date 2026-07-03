@@ -1,6 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const birds = await getCollection('birds')
+const featuredBirds = birds.filter((bird) =>
+	bird.data.featured
+)
 ---
 
 <BaseLayout title="Rolf G. Karlsson — Bird Photography">
@@ -9,9 +16,85 @@ import Navbar from '../components/Navbar.astro';
 		<p class="mt-2 text-neutral-400">Bird Photography</p>
 	</header>
 
-	<section class="mx-auto max-w-3xl px-4 pb-6 text-center text-neutral-500">
-		<p>Featured carousel (4–6 hand-picked birds) will go here.</p>
+	<section class="mx-auto max-w-3xl px-4 pb-6 text-center text-neutral-500" id="carousel">
+			{ featuredBirds.map((bird, index) => (
+			<a href={`/gallery/${bird.id}`} class:list={[ index !==0 && 'hidden' ]} class="carousel-slide">
+				<img src={bird.data.image} alt={bird.data.commonName} class="rounded-md">
+			</a>
+		))}
+		<div class="flex justify-center gap-2 mt-4">
+			{featuredBirds.map((bird, index) =>(
+			<button type="button" data-slide={index} class:list={[ 'px-2 transition-opacity', index === 0 ? 'opacity-100' : 'opacity-40',]} class="carousel-dot">●</button>
+		 ))}
+		</div>
+		 
 	</section>
 
 	<Navbar />
+	<Footer />
 </BaseLayout>
+
+<script>
+function initCarousel(){
+	const carousel = document.getElementById('carousel');
+	if (!carousel) return;
+
+	const slides = carousel.querySelectorAll('.carousel-slide');
+	const dots = carousel.querySelectorAll('.carousel-dot');
+	if (slides.length === 0) return;
+
+	let currentIndex = 0;
+	let timerId = null;
+	const INTERVAL_MS = 5000;
+
+	function showSlide(index) {
+		slides.forEach((slide, i) => {
+			slide.classList.toggle('hidden', i !== index);
+		});
+
+		dots.forEach((dot, i) => {
+			dot.classList.toggle('opacity-100', i === index);
+			dot.classList.toggle('opacity-40', i !== index);
+		});
+
+		currentIndex = index;
+	}
+
+	function nextSlide() {
+		showSlide((currentIndex + 1) % slides.length);
+	}
+
+	function startAuto() {
+		stopAuto();
+		if (slides.length <= 1) return;
+		timerId = window.setInterval(nextSlide, INTERVAL_MS);
+	}
+
+	function stopAuto() {
+		if (timerId !== null) {
+			window.clearInterval(timerId);
+			timerId = null;
+		}
+	}
+
+	dots.forEach((dot) => {
+		dot.addEventListener('click', () => {
+			const slideIndex = dot.dataset.slide;
+			if (slideIndex === undefined) return;
+
+			const index = Number(slideIndex);
+			if (Number.isNaN(index)) return;
+
+			showSlide(index);
+			stopAuto();
+		});
+	});
+
+	carousel.addEventListener('mouseenter', stopAuto);
+	carousel.addEventListener('mouseleave', startAuto);
+
+	showSlide(0);
+	startAuto();
+}
+initCarousel();
+</script>
