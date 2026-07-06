@@ -10,6 +10,7 @@ const birds = defineCollection({
 		date: z.coerce.date(),
 		location: z.string(),
 		story: z.string(),
+		source: z.string(),
 		featured: z.boolean().default(false),
 		image: z.string(),
 	}),

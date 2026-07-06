@@ -12,22 +12,23 @@ const featuredBirds = birds.filter((bird) =>
 
 <BaseLayout title="Rolf G. Karlsson — Bird Photography">
 	<header class="px-4 py-10 text-center">
-		<h1 class="text-3xl font-light tracking-wide md:text-4xl">Rolf G. Karlsson</h1>
-		<p class="mt-2 text-neutral-400">Bird Photography</p>
+		<h1 class="text-3xl font-light tracking-wide md:text-6xl font-display">Rolf G. Karlsson</h1>
+		<p class="mt-2 mb-10 text-lg font-display text-neutral-400">Bird Photography</p>
 	</header>
 
-	<section class="mx-auto max-w-3xl px-4 pb-6 text-center text-neutral-500" id="carousel">
-			{ featuredBirds.map((bird, index) => (
-			<a href={`/gallery/${bird.id}`} class:list={[ index !==0 && 'hidden' ]} class="carousel-slide">
-				<img src={bird.data.image} alt={bird.data.commonName} class="rounded-md">
+	<section class="mx-auto max-w-6xl mb-10 px-4 pb-6 overflow-hidden" id="carousel">
+		<div class="flex gap-6 w-max" id="marquee-track">
+			{ featuredBirds.map((bird) => (
+			<a href={`/gallery/${bird.id}`} class="block overflow-hidden rounded-lg border border-neutral-700 hover:opacity-90 shrink-0 w-xl">
+				<img src={bird.data.image} alt={bird.data.commonName} class="w-full h-100 object-cover">
 			</a>
-		))}
-		<div class="flex justify-center gap-2 mt-4">
-			{featuredBirds.map((bird, index) =>(
-			<button type="button" data-slide={index} class:list={[ 'px-2 transition-opacity', index === 0 ? 'opacity-100' : 'opacity-40',]} class="carousel-dot">●</button>
-		 ))}
+			))}
+			{ featuredBirds.map((bird) => (
+				<a href={`/gallery/${bird.id}`} class="block overflow-hidden rounded-lg border border-neutral-700 hover:opacity-90 shrink-0 w-xl">
+				<img src={bird.data.image} alt={bird.data.commonName} class="w-full h-100 object-cover">
+			</a>
+			))}
 		</div>
-		 
 	</section>
 
 	<Navbar />
@@ -35,66 +36,28 @@ const featuredBirds = birds.filter((bird) =>
 </BaseLayout>
 
 <script>
-function initCarousel(){
-	const carousel = document.getElementById('carousel');
-	if (!carousel) return;
+	import gsap from 'gsap';
 
-	const slides = carousel.querySelectorAll('.carousel-slide');
-	const dots = carousel.querySelectorAll('.carousel-dot');
-	if (slides.length === 0) return;
+	function initMarquee() {
+		const carousel = document.getElementById('carousel');
+		const track = document.getElementById('marquee-track');
+		if (!carousel || !track) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-	let currentIndex = 0;
-	let timerId = null;
-	const INTERVAL_MS = 5000;
+		gsap.context(() => {
+			const tween = gsap.to(track, {
+				x: '-50%',
+				duration: 30,
+				ease: 'none',
+				repeat: -1,
+			});
 
-	function showSlide(index) {
-		slides.forEach((slide, i) => {
-			slide.classList.toggle('hidden', i !== index);
-		});
-
-		dots.forEach((dot, i) => {
-			dot.classList.toggle('opacity-100', i === index);
-			dot.classList.toggle('opacity-40', i !== index);
-		});
-
-		currentIndex = index;
+			carousel.addEventListener('mouseenter', () => tween.pause());
+			carousel.addEventListener('mouseleave', () => tween.play());
+		}, carousel);
 	}
 
-	function nextSlide() {
-		showSlide((currentIndex + 1) % slides.length);
-	}
-
-	function startAuto() {
-		stopAuto();
-		if (slides.length <= 1) return;
-		timerId = window.setInterval(nextSlide, INTERVAL_MS);
-	}
-
-	function stopAuto() {
-		if (timerId !== null) {
-			window.clearInterval(timerId);
-			timerId = null;
-		}
-	}
-
-	dots.forEach((dot) => {
-		dot.addEventListener('click', () => {
-			const slideIndex = dot.dataset.slide;
-			if (slideIndex === undefined) return;
-
-			const index = Number(slideIndex);
-			if (Number.isNaN(index)) return;
-
-			showSlide(index);
-			stopAuto();
-		});
-	});
-
-	carousel.addEventListener('mouseenter', stopAuto);
-	carousel.addEventListener('mouseleave', startAuto);
-
-	showSlide(0);
-	startAuto();
-}
-initCarousel();
+	initMarquee();
 </script>
+
+
